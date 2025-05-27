@@ -46,7 +46,7 @@ def load_arff_data(file_path='Autism_Data.arff'):
                                 continue
                         else:
                             if value != '?':  # Ignorer les valeurs manquantes
-                                transaction.append(f"{attr_name}_{value}")
+                                transaction.append(attr_name)  # Ajouter seulement le nom de l'attribut
                     
                     if transaction:  # Ne garder que les transactions non vides
                         transactions.append(transaction)
@@ -55,3 +55,4 @@ def load_arff_data(file_path='Autism_Data.arff'):
 
 # Charger les transactions depuis le fichier ARFF
 transactions = load_arff_data() 
+# Afficher les colonnes uniques présentes dans les transaction
