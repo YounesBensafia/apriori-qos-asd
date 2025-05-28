@@ -65,8 +65,12 @@ class Apriori:
                     
                     confidence = self.frequent_itemsets[itemset] / self.frequent_itemsets[antecedent]
                     
+                    # Calculate lift
+                    consequent_support = self.frequent_itemsets[frozenset(consequent)]
+                    lift = confidence / consequent_support
+                    
                     if confidence >= self.min_confidence:
-                        self.rules.append((antecedent, consequent, confidence))
+                        self.rules.append((antecedent, consequent, confidence, lift))
 
 
 # Example usage
@@ -81,11 +85,11 @@ if __name__ == "__main__":
     import csv
     with open('apriori_rules.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['Antecedent', 'Consequent', 'Confidence'])
-        for antecedent, consequent, confidence in apriori.rules:
+        writer.writerow(['Antecedent', 'Consequent', 'Confidence', 'Lift'])
+        for antecedent, consequent, confidence, lift in apriori.rules:
             # Convert frozenset to string and remove frozenset formatting
             ant_str = ', '.join(str(x) for x in antecedent)
             cons_str = ', '.join(str(x) for x in consequent)
-            writer.writerow([ant_str, cons_str, f"{confidence:.3f}"])
+            writer.writerow([ant_str, cons_str, f"{confidence:.3f}", f"{lift:.3f}"])
     
     print("Rules saved to apriori_rules.csv")
