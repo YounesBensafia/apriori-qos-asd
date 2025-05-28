@@ -75,7 +75,6 @@ class Apriori:
 
 # Example usage
 if __name__ == "__main__":
-    # Initialize and run Apriori
     print("Running Apriori...")
     apriori = Apriori(min_support=0.2)
     print("Apriori running...")     
