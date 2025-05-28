@@ -3,7 +3,7 @@ import os
 
 # Read the autism dataset
 current_dir = os.path.dirname(os.path.abspath(__file__))
-data_path = os.path.join(current_dir, 'Autism_Data.csv')
+data_path = os.path.join(current_dir, 'Autism_Data_Final.csv')
 
 # Read CSV file
 df = pd.read_csv(data_path)
