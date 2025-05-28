@@ -79,7 +79,7 @@ def print_rules(rules):
 
 if __name__ == "__main__":
     # Extraire les règles
-    rules = extract_rules(transactions, min_support=0.1, min_qos=0.0)
+    rules = extract_rules(transactions, min_support=0.2, min_qos=0.0)
     
     # Trier les règles par score QoS moyen
     rules.sort(key=lambda x: np.mean(list(x['qos_scores'].values())), reverse=True)
