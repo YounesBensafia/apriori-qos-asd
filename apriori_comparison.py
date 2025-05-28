@@ -71,4 +71,21 @@ class Apriori:
 
 # Example usage
 if __name__ == "__main__":
+    # Initialize and run Apriori
+    print("Running Apriori...")
+    apriori = Apriori(min_support=0.2)
+    print("Apriori running...")     
+    apriori.fit(transactions)
+    print("Apriori completed")
     
+    import csv
+    with open('apriori_rules.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Antecedent', 'Consequent', 'Confidence'])
+        for antecedent, consequent, confidence in apriori.rules:
+            # Convert frozenset to string and remove frozenset formatting
+            ant_str = ', '.join(str(x) for x in antecedent)
+            cons_str = ', '.join(str(x) for x in consequent)
+            writer.writerow([ant_str, cons_str, f"{confidence:.3f}"])
+    
+    print("Rules saved to apriori_rules.csv")

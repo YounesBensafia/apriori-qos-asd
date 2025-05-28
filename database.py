@@ -1,58 +1,20 @@
-import arff
-import numpy as np
+import pandas as pd
+import os
 
-def load_arff_data(file_path='Autism_Data.arff'):
-    """
-    Charge les données depuis un fichier ARFF et les convertit en format de transactions
-    """
-    attributes = []
-    transactions = []
-    data_section = False
-    
-    with open(file_path, 'r') as f:
-        for line in f:
-            line = line.strip()
-            
-            # Ignorer les lignes vides et les commentaires
-            if not line or line.startswith('%'):
-                continue
-                
-            # Détecter le début de la section @DATA
-            if line.upper() == '@DATA':
-                data_section = True
-                continue
-                
-            # Lire les attributs
-            if not data_section and line.startswith('@ATTRIBUTE'):
-                parts = line.split()
-                if len(parts) >= 3:
-                    attr_name = parts[1]
-                    attr_type = parts[2].upper()
-                    attributes.append((attr_name, attr_type))
-                continue
-                
-            # Lire les données
-            if data_section:
-                values = line.split(',')
-                if len(values) == len(attributes):
-                    transaction = []
-                    for i, (attr_name, attr_type) in enumerate(attributes):
-                        value = values[i].strip()
-                        if attr_type == 'NUMERIC':
-                            try:
-                                if float(value) == 1:
-                                    transaction.append(attr_name)
-                            except ValueError:
-                                continue
-                        else:
-                            if value != '?':  # Ignorer les valeurs manquantes
-                                transaction.append(attr_name)  # Ajouter seulement le nom de l'attribut
-                    
-                    if transaction:  # Ne garder que les transactions non vides
-                        transactions.append(transaction)
-    
-    return transactions
+# Read the autism dataset
+current_dir = os.path.dirname(os.path.abspath(__file__))
+data_path = os.path.join(current_dir, 'Autism_Data.csv')
 
-# Charger les transactions depuis le fichier ARFF
-transactions = load_arff_data() 
-# Afficher les colonnes uniques présentes dans les transaction
+# Read CSV file
+df = pd.read_csv(data_path)
+
+# Convert dataframe to list of transactions
+transactions = []
+for _, row in df.iterrows():
+    transaction = set()
+    for column in df.columns:
+        if column not in ['age', 'result', 'Class/ASD']:  # Exclude non-categorical columns
+            value = row[column]
+            if pd.notna(value):  # Only add non-null values
+                transaction.add(f"{column}_{value}")
+    transactions.append(transaction)
