@@ -87,6 +87,12 @@ def main():
     print(f"\nCleaned data saved to: {output_path}")
     
     return df_clean
-
 if __name__ == "__main__":
-    main()
+    df_clean = main()
+    df_clean = df_clean.dropna()
+    print(f"\nRemoved all rows with missing values. New shape: {df_clean.shape}")
+    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Autism_Data_Final.csv')
+    df_clean.to_csv(output_path, index=False)
+    print(f"\nFinal cleaned data saved to: {output_path}")
+    empty_values = df_clean.isna().sum().sum()
+    print(f"\nNumber of empty values in final dataset: {empty_values}")
