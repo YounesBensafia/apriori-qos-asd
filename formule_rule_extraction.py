@@ -1,9 +1,31 @@
-from database import transactions
 from formule import qos_asd
 from itertools import combinations
 import numpy as np
 import csv
 import os
+
+
+def load_transactions_from_csv(file_path=None):
+        import pandas as pd
+        import os
+        
+        if file_path is None:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            file_path = os.path.join(current_dir, 'database/autism_screening.csv')
+            
+        df = pd.read_csv(file_path)
+        
+        # Convert dataframe rows to transactions
+        transactions = []
+        for _, row in df.iterrows():
+            transaction = set()
+            for col in df.columns:
+                if row[col] == 1:
+                    transaction.add(col)
+            transactions.append(transaction)
+            
+        return transactions
+
 
 def calculate_probabilities(antecedent, consequent, transactions):
     """
@@ -88,4 +110,5 @@ def extract_rules(transactions, min_support=0.2, min_qos=0.0):
 
 if __name__ == "__main__":
     # Extract rules
+    transactions = load_transactions_from_csv()
     extract_rules(transactions, min_support=0.2, min_qos=0.0)

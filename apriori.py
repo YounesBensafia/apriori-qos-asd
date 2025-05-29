@@ -1,7 +1,6 @@
 import numpy as np
 from itertools import combinations
 from formule import qos_asd
-from database import transactions
 
 class Apriori:
     def __init__(self, min_support=0.1, min_confidence=0.5):
@@ -72,11 +71,36 @@ class Apriori:
                     if confidence >= self.min_confidence:
                         self.rules.append((antecedent, consequent, confidence, lift))
 
+def load_transactions_from_csv(file_path=None):
+        import pandas as pd
+        import os
+        
+        if file_path is None:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            file_path = os.path.join(current_dir, 'database/autism_screening.csv')
+            
+        df = pd.read_csv(file_path)
+        
+        # Convert dataframe rows to transactions
+        transactions = []
+        for _, row in df.iterrows():
+            transaction = set()
+            for col in df.columns:
+                if row[col] == 1:
+                    transaction.add(col)
+            transactions.append(transaction)
+            
+        return transactions
 
 # Example usage
 if __name__ == "__main__":
     print("Running Apriori...")
     apriori = Apriori(min_support=0.2)
+    print("Loading transactions from CSV...")
+    
+    # Read transactions from CSV file
+    
+    transactions = load_transactions_from_csv()
     print("Apriori running...")     
     apriori.fit(transactions)
     print("Apriori completed")
